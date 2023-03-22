@@ -1,0 +1,4 @@
+- [ ] Plan out basic engine structure
+- [ ] Create a simple sprite renderer
+- [ ] Load a png from file
+- [ ] Create asset manager and handle system
