@@ -6,7 +6,8 @@
         {
             "label": "cargo new lib",
             "type": "shell",
-            "command": "cargo new --lib --vcs none crates/${input:crate_name}"
+            "command": "cargo new --lib --vcs none crates/${input:crate_name}",
+            "problemMatcher": []
         }
     ],
     "inputs": [

@@ -1,3 +1,5 @@
+use ds_core::engine;
+
 fn main() {
-    println!("Hello, world!");
+    engine::Engine::start();
 }
