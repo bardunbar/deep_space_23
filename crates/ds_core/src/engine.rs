@@ -1,13 +1,14 @@
-// use miniquad::*;
 
 use miniquad::{
     EventHandler,
     conf
 };
 
+use crate::graphics::GraphicsSystem;
+
 
 pub struct Engine {
-
+    graphics: GraphicsSystem
 }
 
 impl Engine {
@@ -19,13 +20,21 @@ impl Engine {
                 window_height: 768,
                 fullscreen: false,
                 ..Default::default()
-            }, |_ctx| { Box::new(Engine{})});
+            }, |_ctx| { Box::new(Engine::new())});
+    }
+
+    fn new() -> Engine {
+        Engine { 
+            graphics: GraphicsSystem::new() 
+        }
     }
 }
 
 impl EventHandler for Engine {
-    fn update(&mut self, _ctx: &mut miniquad::Context) {
+    fn update(&mut self, ctx: &mut miniquad::Context) {
         
+        self.graphics.update(ctx);
+
     }
 
     fn draw(&mut self, _ctx: &mut miniquad::Context) {

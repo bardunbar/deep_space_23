@@ -1,4 +1,5 @@
 - [ ] Plan out basic engine structure
+- [ ] Port my config logic to the engine
 - [ ] Create a simple sprite renderer
 - [ ] Load a png from file
 - [ ] Create asset manager and handle system
