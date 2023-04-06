@@ -1,14 +1,16 @@
 
 use miniquad::{
     EventHandler,
+    GraphicsContext,
     conf
 };
 
-use crate::graphics::GraphicsSystem;
+use crate::graphics::{GraphicsSystem, TextureHandle};
 
 
 pub struct Engine {
-    graphics: GraphicsSystem
+    graphics: GraphicsSystem,
+    test_handle: TextureHandle,
 }
 
 impl Engine {
@@ -20,24 +22,39 @@ impl Engine {
                 window_height: 768,
                 fullscreen: false,
                 ..Default::default()
-            }, |_ctx| { Box::new(Engine::new())});
+            }, |ctx| { Box::new(Engine::new(ctx))});
     }
 
-    fn new() -> Engine {
-        Engine { 
-            graphics: GraphicsSystem::new() 
+    fn new(ctx: &mut GraphicsContext) -> Engine {
+
+        let mut graphics = GraphicsSystem::new(ctx);
+
+        let handle = graphics.load_texture("assets/ds_tileset.png");
+
+        Engine {
+            graphics,
+            test_handle: handle,
         }
     }
 }
 
 impl EventHandler for Engine {
     fn update(&mut self, ctx: &mut miniquad::Context) {
-        
+
         self.graphics.update(ctx);
 
     }
 
-    fn draw(&mut self, _ctx: &mut miniquad::Context) {
-        
+    fn draw(&mut self, ctx: &mut miniquad::Context) {
+
+        ctx.begin_default_pass(Default::default());
+
+        self.graphics.batch(ctx, &mut |sb| {
+            sb.draw(&self.test_handle.texture, 0.0, 0.0);
+        });
+
+        ctx.end_render_pass();
+
+        ctx.commit_frame();
     }
 }

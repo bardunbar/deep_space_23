@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Work Logs/2023-03-26 - A Texture Factory.md",
+                "file": "Tasks.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Work Logs/2023-03-26 - A Texture Factory.md",
+                "file": "Tasks.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Work Logs/2023-03-26 - A Texture Factory.md",
+                "file": "Tasks.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Work Logs/2023-03-26 - A Texture Factory.md"
+                "file": "Tasks.md"
               }
             }
           }
@@ -162,9 +162,13 @@
   },
   "active": "3fd2e0363dbca1f6",
   "lastOpenFiles": [
-    "Work Logs/2023-03-25 - Figuring Out File IO.md",
-    "Work Logs/2023-03-26 - A Texture Factory.md",
+    "Work Logs/2023-04-06 - And We Have A Sprite!.md",
+    "_data/FirstSprite.png",
+    "_data",
+    "Work Logs/2023-04-05 - Almost Rendering A Sprite.md",
     "Tasks.md",
+    "Work Logs/2023-03-26 - A Texture Factory.md",
+    "Work Logs/2023-03-25 - Figuring Out File IO.md",
     "Work Logs/2023-03-23 - Planning Structure.md",
     "Work Logs/2023-03-22 - Project Start.md",
     "_templates/WorkLogTemplate.md",
