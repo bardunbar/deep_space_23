@@ -1,5 +1,8 @@
+- [x] Load a png from file
 - [x] Create a simple sprite renderer
-- [ ] Plan out basic engine structure
+- [x] Plan out basic engine structure
+- [ ] Expose sprite draw to game module
+- [ ] Improve the texture wraping
+- [ ] Create a camera class
 - [ ] Port my config logic to the engine
-- [ ] Load a png from file
 - [ ] Create asset manager and handle system

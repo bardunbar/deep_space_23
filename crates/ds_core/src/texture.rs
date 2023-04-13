@@ -12,7 +12,7 @@ use crate::error::Error;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Texture2D {
-    pub(crate) texture: miniquad::Texture, 
+    pub(crate) texture: miniquad::Texture,
 }
 
 impl Texture2D {
@@ -31,6 +31,10 @@ impl Texture2D {
                 Err(Error::error(&e.to_string()))
             }
         }
+    }
+
+    pub(crate) fn empty() -> Texture2D {
+        Texture2D { texture: miniquad::Texture::empty() }
     }
 
     pub fn width(&self) -> u32 {

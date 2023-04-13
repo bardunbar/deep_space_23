@@ -11,18 +11,18 @@ use miniquad::{
     Texture
 };
 use std::sync::{Arc, Mutex};
-use glam::{Vec2, Vec3, Quat, vec3};
+use glam::{vec3, Mat4};
 
-use crate::texture::Texture2D;
+use crate::{texture::Texture2D, display_object::DisplayObject};
 
-type TextureReference = Arc<Mutex<Option<Texture2D>>>;
+pub(crate) type TextureReference = Arc<Mutex<Option<Texture2D>>>;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Vertex {
-    pos: [f32; 3],
-    uv: [f32; 2],
-    color: [u8; 4],
+    pub pos: [f32; 3],
+    pub uv: [f32; 2],
+    pub color: [u8; 4],
 }
 
 #[derive(Debug, Clone)]
@@ -47,6 +47,10 @@ impl TextureHandle {
             },
             None => { 0 }
         }
+    }
+
+    pub(crate) fn get_texture(&self) -> Option<Texture2D> {
+        *self.texture.lock().unwrap()
     }
 }
 
@@ -100,10 +104,8 @@ impl GraphicsSystem {
     pub fn load_texture(&mut self, path: &str) -> TextureHandle {
 
         let contents = Arc::new(Mutex::new(None));
-
         {
             let contents = contents.clone();
-
             crate::file::load_bytes_async(path, move |result| {
                 *contents.lock().unwrap() = Some(result);
             });
@@ -129,15 +131,15 @@ impl GraphicsSystem {
 
 }
 
-
-pub struct SpriteInfo {
+pub struct DrawInfo {
     pub(crate) texture: Texture2D,
-    pub(crate) position: Vec2,
+    pub(crate) transform: Mat4,
+    pub(crate) verts: Vec<Vertex>,
 }
 
 // https://gamedev.stackexchange.com/questions/21220/how-exactly-does-xnas-spritebatch-work
 pub struct SpriteBatch {
-    draw_calls: Vec<SpriteInfo>,
+    draw_calls: Vec<DrawInfo>,
     pipeline: Pipeline,
     bindings: Bindings,
 }
@@ -180,15 +182,16 @@ impl SpriteBatch {
 
     }
 
-    pub fn draw(&mut self, texture_reference: &TextureReference, x: f32, y:f32) {
-        if let Some(texture) = *texture_reference.lock().unwrap() {
-            let draw_call = SpriteInfo {
-                texture: texture.clone(),
-                position: Vec2::new(x, y)
-            };
+    pub fn draw(&mut self, object: &impl DisplayObject) {
 
-            self.draw_calls.push(draw_call);
-        }
+        let draw_call = DrawInfo {
+            texture: object.get_texture(),
+            transform: object.get_transform(),
+            verts: object.get_verts().clone(),
+        };
+
+        self.draw_calls.push(draw_call);
+
     }
 
     pub fn end(&mut self, ctx: &mut GraphicsContext) {
@@ -205,23 +208,12 @@ impl SpriteBatch {
         // For now don't bother batching... just render one at a time
         for draw_call in self.draw_calls.iter() {
 
-            let model = glam::Mat4::from_scale_rotation_translation(Vec3::ONE, Quat::IDENTITY, Vec3::new(draw_call.position.x, draw_call.position.y, 0.));
-
-            let texture_width = draw_call.texture.texture.width as f32;
-            let texture_height = draw_call.texture.texture.height as f32;
-
-            let vertices: [Vertex; 4] = [
-                Vertex { pos: [0.0, 0.0, 0.0], uv: [0.0, 0.0], color: [255, 255, 255, 255]},
-                Vertex { pos: [0.0, texture_height, 0.0], uv: [0.0, 1.0], color: [255, 255, 255, 255]},
-                Vertex { pos: [texture_width, texture_height, 0.0], uv: [1.0, 1.0], color: [255, 255, 255, 255]},
-                Vertex { pos: [texture_width, 0.0, 0.0], uv: [1.0, 0.0], color: [255, 255, 255, 255]},
-            ];
-            self.bindings.vertex_buffers[0].update(ctx, &vertices);
+            self.bindings.vertex_buffers[0].update(ctx, &draw_call.verts);
             self.bindings.images[0] = draw_call.texture.texture;
 
             ctx.apply_bindings(&self.bindings);
 
-            let mvp = view_proj * model;
+            let mvp = view_proj * draw_call.transform;
             ctx.apply_uniforms(&shader::Uniforms {
                 mvp
             });

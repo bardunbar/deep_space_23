@@ -1,12 +1,8 @@
 [package]
-name = "ds_core"
+name = "ds_math"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-glam = "0.23.0"
-image = {version = "0.24.6", default_features=false, features=["png"]}
-miniquad = "0.3.16"
-ds_math = {path = "../ds_math"}

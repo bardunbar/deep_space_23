@@ -1,11 +1,12 @@
 
+use ds_math::Rect2D;
 use miniquad::{
     EventHandler,
     GraphicsContext,
     conf
 };
 
-use crate::graphics::{GraphicsSystem, TextureHandle};
+use crate::{graphics::{GraphicsSystem, TextureHandle}, display_object};
 
 
 pub struct Engine {
@@ -50,7 +51,13 @@ impl EventHandler for Engine {
         ctx.begin_default_pass(Default::default());
 
         self.graphics.batch(ctx, &mut |sb| {
-            sb.draw(&self.test_handle.texture, 0.0, 0.0);
+            sb.draw(&display_object::DisplaySprite::new(self.test_handle.clone(), 128.0, 128.0));
+
+            sb.draw(&display_object::DisplaySprite::new_rect(self.test_handle.clone(), 256.0, 256.0,
+                Rect2D::new(0.0, 0.0, 64.0, 64.0)));
+
+            sb.draw(&display_object::DisplaySprite::new_rect(self.test_handle.clone(), 192.0, 192.0,
+                Rect2D::new(64.0, 0.0, 64.0, 64.0)));
         });
 
         ctx.end_render_pass();
